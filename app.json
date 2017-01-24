@@ -1,0 +1,7 @@
+{
+  "name": "Alexa JIRA Skill",
+  "description": "An amazon alexa skill for querying a JIRA api",
+  "repository": "https://github.com/dennis-learningpool/alexa-jira-skill.git",
+  "keywords": ["node", "alexa", "amazon", "heroku", "jira"],
+  "image": "heroku/nodejs"
+}
