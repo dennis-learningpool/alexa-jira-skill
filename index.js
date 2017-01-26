@@ -93,7 +93,7 @@ app.intent(
                 return res.say(`Sorry, there was an error: ${err.message}`).send();
             }
 
-            return res.say(summary);
+            return res.say(summary).send();
         });
 
         return false;
