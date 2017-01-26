@@ -59,7 +59,7 @@ app.intent(
 
             var responseText = [`There are ${result.issues.length} epics in the ${project} project. They are:`];
             result.issues.forEach(function (epic) {
-                responseText.push(`${epic.key}: ${epic.fields.summary}`);
+                responseText.push(`${epic.key}: ${epic.fields.summary}.`);
             });
 
             responseText.push(`Which epic shall I summarize?`);
