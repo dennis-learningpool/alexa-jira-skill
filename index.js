@@ -64,12 +64,9 @@ app.intent(
                 responseText.push(`${epic.key}: ${epic.fields.summary}`);
             });
 
-            // save epic keys in session
-            res.getSession().set('epicKeys', epicKeys);
-
             responseText.push(`Which epic shall I summarize?`);
 
-            res.say(responseText.join("\n")).send();
+            res.say(responseText.join("\n"));
         });
 	}
 );
@@ -89,13 +86,13 @@ app.intent(
         var number = req.slot('number');
         var epicKey = `${project}-${number}`;
         var query = new JiraQuery(jiraApi);
-        query.getEpicSummary(key, function (err, summary) {
+        query.getEpicSummary(epicKey, function (err, summary) {
             if (err) {
                 console.log(err);
                 return res.say(`Sorry, there was an error: ${err.message}`).send();
             }
 
-            return res.say(summary).send();
+            return res.say(summary);
         });
     }
 );
