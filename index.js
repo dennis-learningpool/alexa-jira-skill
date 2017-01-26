@@ -49,7 +49,7 @@ app.intent(
 		]
 	},
 	function (req, res) {
-		var project = req.slot('project');
+		var project = req.slot('project').toUpperCase();
         var query = new JiraQuery(jiraApi);
         query.getEpicsInProject(project, function (err, result) {
             if (err) {
@@ -57,10 +57,8 @@ app.intent(
                 return res.say(`Sorry, there was an error. ${err.message}`).send();
             }
 
-            var epicKeys = [];
             var responseText = [`There are ${result.issues.length} epics in the ${project} project. They are:`];
             result.issues.forEach(function (epic) {
-                epicKeys.push(epic.key);
                 responseText.push(`${epic.key}: ${epic.fields.summary}`);
             });
 
@@ -82,7 +80,7 @@ app.intent(
 		]
 	},
 	function (req, res) {
-		var project = req.slot('project').toLowerCase();
+		var project = req.slot('project').toUpperCase();
         var number = req.slot('number');
         var epicKey = `${project}-${number}`;
         var query = new JiraQuery(jiraApi);
