@@ -64,9 +64,11 @@ app.intent(
 
             responseText.push(`Which epic shall I summarize?`);
 
-            res.say(responseText.join("\n"));
+            return res.say(responseText.join("\n")).send();
         });
 	}
+
+    return false;
 );
 
 app.intent(
@@ -92,6 +94,8 @@ app.intent(
 
             return res.say(summary);
         });
+
+        return false;
     }
 );
 
