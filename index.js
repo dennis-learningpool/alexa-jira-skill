@@ -66,9 +66,10 @@ app.intent(
 
             return res.say(responseText.join("\n")).send();
         });
+
+        return false;
 	}
 
-    return false;
 );
 
 app.intent(
