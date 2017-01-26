@@ -78,7 +78,7 @@ app.intent(
 	'JiraEpicSummaryIntent', {
 		'slots': {
 			'project' : 'string',
-            'number' : Amazon.NUMBER
+            'number' : 'number'
 		},
 		'utterances': [
 			'{project} {number}'
@@ -98,6 +98,6 @@ app.intent(
             return res.say(summary).send();
         });
     }
-):
+);
 
 module.exports = app;
