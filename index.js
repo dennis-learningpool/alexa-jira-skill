@@ -66,13 +66,13 @@ app.intent(
             session.clear('enumerated');
         }
 
-        query.getEpicsInProject(project, { startAt: startAt } function (err, result) {
+        query.getEpicsInProject(project, { startAt: startAt }, function (err, result) {
             if (err) {
                 console.log('There was an error:', err);
                 return res.say(`Sorry, there was an error. ${err.message}`).send();
             }
 
-            var responseText = [`There are ${result.issues.length} epics in the ${project} project. They are:`];
+            var responseText = [`There are ${result.total} epics in the ${project} project. They are:`];
             result.issues.forEach(function (epic) {
                 responseText.push(`${epic.key}: ${epic.fields.summary}.`);
             });
@@ -80,9 +80,9 @@ app.intent(
             var enumerated = result.startAt + result.maxResults;
             var hasMore = enumerated < result.total;
             if (enumerated < result.total) {
-                var remaining = results.total - enumerated;
+                var remaining = result.total - enumerated;
                 var resultText = pluralize('result', remaining);
-                responseText.push(`Shall I list ${remaining} more ${resultText}?`);
+                responseText.push(`Shall I continue listing ${remaining} more ${resultText}?`);
 
                 // set session vars for next time!
                 session.set('enumerated', enumerated);
