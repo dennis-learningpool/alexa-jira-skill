@@ -13,6 +13,7 @@ var jiraConfig = {
 
 const Alexa = require('alexa-app');
 const JiraApi = require('jira').JiraApi;
+const pluralize = require('pluralize');
 const JiraQuery = require('./lib/jiraquery');
 
 var app = new Alexa.app('alexa-jira-skill');
@@ -49,9 +50,23 @@ app.intent(
 		]
 	},
 	function (req, res) {
+        var session = req.getSession();
 		var project = req.slot('project').toUpperCase();
         var query = new JiraQuery(jiraApi);
-        query.getEpicsInProject(project, function (err, result) {
+        var startAt = 0;
+
+        // if session var 'project' is set, then we are responding to a request for more
+        var sessionProject = session.get('project');
+        if (sessionProject) {
+            project = sessionProject;
+            startAt = session.get('enumerated');
+
+            // clear session vars
+            session.clear('project');
+            session.clear('enumerated');
+        }
+
+        query.getEpicsInProject(project, { startAt: startAt } function (err, result) {
             if (err) {
                 console.log('There was an error:', err);
                 return res.say(`Sorry, there was an error. ${err.message}`).send();
@@ -62,7 +77,17 @@ app.intent(
                 responseText.push(`${epic.key}: ${epic.fields.summary}.`);
             });
 
-            responseText.push(`Which epic shall I summarize?`);
+            var enumerated = result.startAt + result.maxResults;
+            var hasMore = enumerated < result.total;
+            if (enumerated < result.total) {
+                var remaining = results.total - enumerated;
+                var resultText = pluralize('result', remaining);
+                responseText.push(`Shall I list ${remaining} more ${resultText}?`);
+
+                // set session vars for next time!
+                session.set('enumerated', enumerated);
+                session.set('project', project);
+            }
 
             return res.say(responseText.join("\n")).send();
         });

@@ -12,7 +12,9 @@
   "dependencies": {
     "alexa-app": "2.4.0",
     "ejs": "2.4.1",
-    "jira": "0.9.2"
+    "jira": "0.9.2",
+    "pluralize": "3.1.0",
+    "underscore": "1.8.3"
   },
   "repository": {
     "type": "git",
