@@ -54,12 +54,14 @@ app.intent(
 		var project = req.slot('project').toUpperCase();
         var query = new JiraQuery(jiraApi);
         var startAt = 0;
+        var more = false;
 
         // if session var 'project' is set, then we are responding to a request for more
         var sessionProject = session.get('project');
-        if (sessionProject) {
+        if (sessionProject && 'YES' === project) {
             project = sessionProject;
             startAt = session.get('enumerated');
+            more = true;
 
             // clear session vars
             session.clear('project');
@@ -72,7 +74,13 @@ app.intent(
                 return res.say(`Sorry, there was an error. ${err.message}`).send();
             }
 
-            var responseText = [`There are ${result.total} epics in the ${project} project. They are:`];
+            var responseText = [];
+
+            // introduction text only if not enumerating more
+            if (!more) {
+                responseText.push(`There are ${result.total} epics in the ${project} project. They are:`);
+            }
+
             result.issues.forEach(function (epic) {
                 responseText.push(`${epic.key}: ${epic.fields.summary}.`);
             });
@@ -108,6 +116,7 @@ app.intent(
 		]
 	},
 	function (req, res) {
+        console.log(req.getSession());
 		var project = req.slot('project').toUpperCase();
         var number = req.slot('number');
         var epicKey = `${project}-${number}`;
